@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/cosc581-project.github.io/static/css/main.24b9c1ac.css",
+    "main.js": "/cosc581-project.github.io/static/js/main.b1ed50de.js",
+    "index.html": "/cosc581-project.github.io/index.html",
+    "main.24b9c1ac.css.map": "/cosc581-project.github.io/static/css/main.24b9c1ac.css.map",
+    "main.b1ed50de.js.map": "/cosc581-project.github.io/static/js/main.b1ed50de.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.24b9c1ac.css",
+    "static/js/main.b1ed50de.js"
+  ]
+}
