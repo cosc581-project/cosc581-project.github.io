@@ -1,29 +1,48 @@
 import React, { useMemo, useState } from "react";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+// import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import * as THREE from "three";
 
 import { Mesh } from "three";
+import OBJData from "./obj-loader";
 
-export default function ObjToPrimitive({ url, mat }) {
-  const [obj, setObj] = useState();
-  useMemo(() => new OBJLoader().load(url, setObj), [url]);
-  if (obj) {
-    obj.traverse((child) => {
-      if (child instanceof Mesh) {
-        const positionAttribute = child.geometry.getAttribute("position");
-        const colors = [];
-		const color = new THREE.Color();
-		for ( let i = 0; i < positionAttribute.count; i += 3 ) {
-			color.set( Math.random() * 0xffffff );
-			colors.push( color.r, color.g, color.b );
-			colors.push( color.r, color.g, color.b );
-			colors.push( color.r, color.g, color.b );
-		}
-        child.geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-        child.material = mat;
-      }
-    });
-    return <primitive object={obj} />;
-  }
-  return null;
+async function loadNetworkResourceAsText(resource){
+  const response = await fetch(resource);
+  const asText = await response.text();
+  return asText;
 }
+
+export default function ObjToPrimitive({ url, }) {
+  const [obj, setObj] = useState();
+  let mesh = null
+
+  function loadObj(url){
+    loadNetworkResourceAsText(url).then((objData) => {
+      let geometry = new THREE.BufferGeometry();
+      let material = new THREE.MeshBasicMaterial({vertexColors:true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1})
+
+      const rawData = new OBJData(objData).getFlattenedDataFromModelAtIndex(0);
+      const vertices = new Float32Array(rawData.vertices);
+      const normals = new Float32Array(rawData.normals);
+      const vertexColors = new Float32Array(rawData.colors);
+      geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+      geometry.setAttribute('normals', new THREE.BufferAttribute(normals, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(vertexColors, 3));
+      geometry.scale(rawData.scalingVector[0], rawData.scalingVector[0], rawData.scalingVector[0]);
+      // console.log(rawData)
+      mesh = new THREE.Mesh(geometry, material);
+      var geo = new THREE.WireframeGeometry( geometry );
+      var mat = new THREE.LineBasicMaterial( { color: "black", linewidth: 1 } );
+      var wireframe = new THREE.LineSegments( geo, mat );
+      mesh.add( wireframe );
+      setObj(mesh);
+    });
+  }
+
+  useMemo(() => loadObj(url), [url]);
+
+  
+  return (
+    <primitive object={obj} />
+  );
+}
+

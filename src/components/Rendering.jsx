@@ -1,24 +1,37 @@
-import React, { useMemo, useState } from "react";
+import React, {  useState } from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useLoader } from '@react-three/fiber'
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Card from "react-bootstrap/Card";
 import ObjToPrimitive from "./ObjToPrimitive";
-
+const base = '/cosc581-project.github.io/models/';
 let objs = {
-  bunny: { scale: [7,7,7], url: '/models/bunny.obj' },
-  cube: { scale: [1,1,1], url: '/models/cube.obj' },
-  sphere: { scale: [1,1,1], url: '/models/sphere.obj' },
-  nefertiti: { scale: [0.5, 0.5, 0.5], url: '/models/nerfertiti.obj' },
+  bunny: `${base}bunny-colored.obj`,
+  // cube: { scale: [1,1,1], url: '/models/cube.obj' },
+  sphere: `${base}sphere-colored.obj`,
+  // nefertiti: { scale: [0.5, 0.5, 0.5], url: '/models/nerfertiti.obj' },
 }
 
 export default function Rendering() {
   const [objName, setObjName] = useState('bunny');
-  const curObj = objs[objName];
-  console.log(objName)
-  const mat = new THREE.MeshBasicMaterial({vertexColors:true})
+  // const curObj = objs[objName];
+  // console.log(objName)
+  // console.log(objs[objName])
+  // function handleSelect(e) {
+  //   console.log('here')
+  //   console.log(e)
+  //   // setObjName(e);
+  // }
+  const handleSelect=(e)=>{
+    console.log(e);
+    setObjName(e);
+  }
+  var models = {
+
+  };
 
   return (
     <div style={{
@@ -35,31 +48,28 @@ export default function Rendering() {
             <div style={{ height: '500px' }}>
             <Canvas camera={{ position: [0, 0, 5], fov: 40}}>
               <ambientLight intensity={1} />
-              <OrbitControls minDistance={1} maxDistance={200} target={[0 , 0, 0]}/>
-              <mesh position={[0, 0, 0]} scale={curObj.scale} >
-                {ObjToPrimitive({url: objs[objName].url, mat})}
-              </mesh>
+              {/* <hemisphereLight intensity={0.35} /> */}
+              <OrbitControls minDistance={1} maxDistance={200} target={[0, 0, 0]}/>
+              {/* <mesh> */}
+              {ObjToPrimitive({url: objs[objName]})}
+              {/* </mesh> */}
             </Canvas>
             </div>
           <Card.Footer>
             Wireframes of meshes for various shapes.
 
-            <Dropdown>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic">
-              Mesh
-            </Dropdown.Toggle>
 
-            <Dropdown.Menu >
+            <DropdownButton 
+              title={objName}
+              onSelect={handleSelect} 
+              >
               {
                 Object.keys(objs).map((objName) => {
-                  return <Dropdown.Item key={objName} onSelect={()=>setObjName(objName)}>{objName}</Dropdown.Item>
+                  return <Dropdown.Item key={objName} eventKey={objName}>{objName}</Dropdown.Item>
                 })
               }
-              {/* <Dropdown.Item >Action</Dropdown.Item>
-              <Dropdown.Item >Another action</Dropdown.Item>
-              <Dropdown.Item >Something else</Dropdown.Item> */}
-            </Dropdown.Menu>
-          </Dropdown>
+            </DropdownButton>
+          {/* </Dropdown> */}
           </Card.Footer>
         </Card.Body>
       </Card>
