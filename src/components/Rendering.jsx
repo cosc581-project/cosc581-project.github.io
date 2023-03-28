@@ -6,33 +6,20 @@ import { useLoader } from '@react-three/fiber'
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Card from "react-bootstrap/Card";
-import ObjToPrimitive from "./ObjToPrimitive";
-const base = '/cosc581-project.github.io/models/';
+import BasicObjLoader from "./BasicObjLoader";
+import StripObjLoader from "./StripObjLoader";
+const base = '/models/';
 let objs = {
-  bunny: `${base}bunny-colored.obj`,
-  // cube: { scale: [1,1,1], url: '/models/cube.obj' },
-  sphere: `${base}sphere-colored.obj`,
-  // nefertiti: { scale: [0.5, 0.5, 0.5], url: '/models/nerfertiti.obj' },
+  bunnyBasic: {url: `${base}bunny-colored.obj`, name: 'Bunny(Basic)', type: 'basic'},
+  bunnyStrip: {url: `${base}bunny-tristrip.obj`, name: 'Bunny(Strip)', type: 'strip'},
+  sphereBasic: {url: `${base}sphere-colored.obj`, name: 'Sphere(Basic)', type: 'basic'},
+  sphereStrip: {url: `${base}sphere-tristrip.obj`, name: 'Sphere(Strip)', type: 'strip'},
+  teapotBasic: {url: `${base}teapot-colored.obj`, name: 'Teapot(Basic)', type: 'basic'},
+  teapotStrip: {url: `${base}teapot-tristrip.obj`, name: 'Teapot(Strip)', type: 'strip'},
 }
 
 export default function Rendering() {
-  const [objName, setObjName] = useState('bunny');
-  // const curObj = objs[objName];
-  // console.log(objName)
-  // console.log(objs[objName])
-  // function handleSelect(e) {
-  //   console.log('here')
-  //   console.log(e)
-  //   // setObjName(e);
-  // }
-  const handleSelect=(e)=>{
-    console.log(e);
-    setObjName(e);
-  }
-  var models = {
-
-  };
-
+  const [objName, setObjName] = useState('bunnyStrip');
   return (
     <div style={{
         display: 'flex',  
@@ -44,28 +31,31 @@ export default function Rendering() {
         >
       <Card style={{ width: '100%', hieght: '100%' }}>
         <Card.Body>
-          <Card.Title>Basic Triangular Mesh</Card.Title>
+          <Card.Title>Rendering Meshes</Card.Title>
             <div style={{ height: '500px' }}>
             <Canvas camera={{ position: [0, 0, 5], fov: 40}}>
               <ambientLight intensity={1} />
-              {/* <hemisphereLight intensity={0.35} /> */}
               <OrbitControls minDistance={1} maxDistance={200} target={[0, 0, 0]}/>
-              {/* <mesh> */}
-              {ObjToPrimitive({url: objs[objName]})}
-              {/* </mesh> */}
+              {/* <group> */}
+              { objs[objName].type === 'basic' 
+                ? BasicObjLoader({url: objs[objName].url})
+                : StripObjLoader({url: objs[objName].url})
+              }
+              {/* </group> */}
             </Canvas>
+
             </div>
           <Card.Footer>
-            Wireframes of meshes for various shapes.
+            Rendering Basic Triangular Meshes and Triangle Strips.
 
 
             <DropdownButton 
-              title={objName}
-              onSelect={handleSelect} 
+              title={objs[objName].name}
+              onSelect={setObjName} 
               >
               {
                 Object.keys(objs).map((objName) => {
-                  return <Dropdown.Item key={objName} eventKey={objName}>{objName}</Dropdown.Item>
+                  return <Dropdown.Item key={objName} eventKey={objName}>{objs[objName].name}</Dropdown.Item>
                 })
               }
             </DropdownButton>

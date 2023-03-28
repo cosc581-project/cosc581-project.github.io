@@ -1,7 +1,6 @@
 {
   "name": "cosc581-project.github.io",
   "version": "0.1.0",
-  "homepage": "https://cosc581-project.github.io/cosc581-project.github.io",
   "private": true,
   "dependencies": {
     "@react-three/drei": "^9.58.4",
@@ -11,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.3",
     "gl-matrix": "^3.4.3",
+    "gltfpack": "^0.18.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",

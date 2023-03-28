@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 import { Mesh } from "three";
 import OBJData from "./obj-loader";
+import { toTrianglesDrawMode } from 'three/addons/utils/BufferGeometryUtils.js';
 
 async function loadNetworkResourceAsText(resource){
   const response = await fetch(resource);
@@ -11,16 +12,19 @@ async function loadNetworkResourceAsText(resource){
   return asText;
 }
 
-export default function ObjToPrimitive({ url, }) {
-  const [obj, setObj] = useState();
-  let mesh = null
+export default function StripObjLoader({ url }) {
+  console.log('stripObjLoader')
+  const [obj, setObj] = useState(<></>);
 
+  let mesh = null
   function loadObj(url){
     loadNetworkResourceAsText(url).then((objData) => {
+      console.log(objData)
       let geometry = new THREE.BufferGeometry();
       let material = new THREE.MeshBasicMaterial({vertexColors:true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1})
 
       const rawData = new OBJData(objData).getFlattenedDataFromModelAtIndex(0);
+      console.log(rawData)
       const vertices = new Float32Array(rawData.vertices);
       const normals = new Float32Array(rawData.normals);
       const vertexColors = new Float32Array(rawData.colors);
@@ -28,21 +32,23 @@ export default function ObjToPrimitive({ url, }) {
       geometry.setAttribute('normals', new THREE.BufferAttribute(normals, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(vertexColors, 3));
       geometry.scale(rawData.scalingVector[0], rawData.scalingVector[0], rawData.scalingVector[0]);
+      // geometry = toTrianglesDrawMode(geometry, THREE.TriangleStripDrawMode);
+
       // console.log(rawData)
       mesh = new THREE.Mesh(geometry, material);
-      var geo = new THREE.WireframeGeometry( geometry );
-      var mat = new THREE.LineBasicMaterial( { color: "black", linewidth: 1 } );
-      var wireframe = new THREE.LineSegments( geo, mat );
-      mesh.add( wireframe );
-      setObj(mesh);
+      // var geo = new THREE.WireframeGeometry( geometry );
+      // var mat = new THREE.LineBasicMaterial( { color: "black", linewidth: 1 } );
+      // var wireframe = new THREE.LineSegments( geo, mat );
+      // mesh.add( wireframe );
+      mesh.drawMode = THREE.TriangleStripDrawMode;
+      // setObj(mesh);
+      setObj(<primitive object={mesh} dispose={null}/>);
+
     });
   }
 
   useMemo(() => loadObj(url), [url]);
+  return obj;
 
-  
-  return (
-    <primitive object={obj} />
-  );
 }
 

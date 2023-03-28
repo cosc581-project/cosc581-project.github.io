@@ -40,7 +40,11 @@ function Line(props) {
   });
   const material = new THREE.LineBasicMaterial({ color: color, linewidth: w });
   const line = new THREE.Line(geometry, material);
-  return <primitive object={line} />;
+  return (
+    <>
+      { line !== null && <primitive object={line} />   }
+    </>
+  );
 }
 
 function Face(props) {
