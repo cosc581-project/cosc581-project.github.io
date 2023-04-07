@@ -13,6 +13,7 @@ export default function NavbarComponent(props) {
             <Nav.Link onClick={() => props.setState('basicMesh')}>Basic Mesh</Nav.Link>
             <Nav.Link onClick={() => props.setState('algorithm')}>Algorithm</Nav.Link>
             <Nav.Link onClick={() => props.setState('rendering')}>Rendering</Nav.Link>
+            <Nav.Link onClick={() => props.setState('prettyRendering')}>Pretty Rendering</Nav.Link>
           </Nav>
       </Navbar>
     );

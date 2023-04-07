@@ -12,8 +12,6 @@ async function loadNetworkResourceAsText(resource){
 }
 
 export default function BasicObjLoader({ url }) {
-  console.log('basicObjLoader')
-
   const [obj, setObj] = useState(<></>);
   let mesh = null
   function loadObj(url){
