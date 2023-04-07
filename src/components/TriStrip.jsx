@@ -289,38 +289,38 @@ export default class TriStrip {
       let strip = walkData.strip;
       let faces = walkData.faces;
 
-      if (faces.length != this.adjMesh.n_faces){
-        // reverse the first part of the strip
-        strip.reverse();
-        faces.reverse();
+      // if (faces.length != this.adjMesh.n_faces){
+      //   // reverse the first part of the strip
+      //   strip.reverse();
+      //   faces.reverse();
 
-        // track the second part of the strip
-        let newRef0 = strip[strip.length-3]
-        let newRef1 = strip[strip.length-2]
-        let iter2 = this.walkStrip(face, newRef0, newRef1, walkData.tags);
-        let oldExtraWalkData = null;
-        let extraWalkData = null;
-        while (true) {
-          extraWalkData = iter2.next();
-          if (extraWalkData.done) break;
-          yield extraWalkData.value;
-          oldExtraWalkData = extraWalkData;
-        }
-        extraWalkData = oldExtraWalkData.value;
+      //   // track the second part of the strip
+      //   let newRef0 = strip[strip.length-3]
+      //   let newRef1 = strip[strip.length-2]
+      //   let iter2 = this.walkStrip(face, newRef0, newRef1, walkData.tags);
+      //   let oldExtraWalkData = null;
+      //   let extraWalkData = null;
+      //   while (true) {
+      //     extraWalkData = iter2.next();
+      //     if (extraWalkData.done) break;
+      //     yield extraWalkData.value;
+      //     oldExtraWalkData = extraWalkData;
+      //   }
+      //   extraWalkData = oldExtraWalkData.value;
 
-        // save histories
-        lengthHist.push(walkData.length + extraWalkData.length - 3);
-        tagsHist.push(extraWalkData.tags);
-        stripsHist.push(strip.slice(0, -2).concat(extraWalkData.strip));
-        facesHist.push(faces.slice(0, -1).concat(extraWalkData.faces));
-        // console.log("[YIELD] ComputeBestStrip Reversed:", {strip: [...stripsHist[stripsHist.length-1]], faces: [...facesHist[facesHist.length-1]], nStripFaces: lengthHist[lengthHist.length-1] - 2})
-        yield {
-          strip: [...stripsHist[stripsHist.length-1]], 
-          faces: [...facesHist[facesHist.length-1]], 
-          nStripFaces: lengthHist[lengthHist.length-1] - 2
-        };
-      }
-      else {
+      //   // save histories
+      //   lengthHist.push(walkData.length + extraWalkData.length - 3);
+      //   tagsHist.push(extraWalkData.tags);
+      //   stripsHist.push(strip.slice(0, -2).concat(extraWalkData.strip));
+      //   facesHist.push(faces.slice(0, -1).concat(extraWalkData.faces));
+      //   // console.log("[YIELD] ComputeBestStrip Reversed:", {strip: [...stripsHist[stripsHist.length-1]], faces: [...facesHist[facesHist.length-1]], nStripFaces: lengthHist[lengthHist.length-1] - 2})
+      //   yield {
+      //     strip: [...stripsHist[stripsHist.length-1]], 
+      //     faces: [...facesHist[facesHist.length-1]], 
+      //     nStripFaces: lengthHist[lengthHist.length-1] - 2
+      //   };
+      // }
+      // else {
         // save histories
         lengthHist.push(walkData.length);
         tagsHist.push(walkData.tags);
@@ -328,7 +328,7 @@ export default class TriStrip {
         facesHist.push(faces);
         // console.log("[YIELD] ComputeBestStrip Straight:", {strip: [...strip], faces: [...faces], nStripFaces: walkData.length - 2})
         yield {strip: [...strip], faces: [...faces], nStripFaces: walkData.length - 2};
-      }
+      // }
     }
     // find the best strip
     let bestLength = getMaxOfArray(lengthHist);
