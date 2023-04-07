@@ -46,9 +46,7 @@ export default function Pretty() {
 
             </div>
           <Card.Footer>
-            Rendering Basic Triangular Meshes and Triangle Strips.
-
-
+            Rendering Meshes with stylized lighting and materials.
             <DropdownButton 
               title={objs[objName].name}
               onSelect={setObjName} 

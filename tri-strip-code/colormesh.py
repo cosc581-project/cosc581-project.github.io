@@ -6,19 +6,21 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 in_fname = 'bunny.obj'
-out_fname = 'bunny-tristrip.obj'
+out_fname = 'test.obj'
 
 strips = pv.read(in_fname)
 print(strips)
 print('-' * 80)
 strips = strips.strip(
-    progress_bar=True, 
+    progress_bar=True,
     join=True,
     pass_cell_data=True,
     pass_cell_ids=True,
     pass_point_ids=True
-    )
-print(strips)
+)
+# print(strips)
+# print(strips.cell[0])
+# exit()
 # print('points:')
 # print(strips.n_points)
 # print(strips.points)
@@ -31,11 +33,11 @@ print(strips)
 # print('strips:')
 # print(strips.n_strips)
 # print(strips.strips)
-
 cell = strips.cell[0]
 color_enums = [None] * strips.n_cells
 colors = [None] * strips.n_cells
 cmap = mpl.colormaps['Set1']
+
 
 def get_neighbor_cell_ids(grid, cell_idx):
     """Helper to get neighbor cell IDs."""
@@ -44,6 +46,7 @@ def get_neighbor_cell_ids(grid, cell_idx):
     neighbors = set(grid.extract_points(pids)["vtkOriginalCellIds"])
     neighbors.discard(cell_idx)
     return np.array(list(neighbors))
+
 
 p = pv.Plotter(notebook=0)
 
@@ -64,7 +67,7 @@ while unvisited_idx:
         # print('already visited', cell_idx)
         continue
     unvisited_idx.remove(cell_idx)
-    
+
     neighbors = get_neighbor_cell_ids(strips, cell_idx)
     # print('neighbors', neighbors)
     used_colors = set()
@@ -113,7 +116,7 @@ ret_out.extend(
 )
 for i in tqdm(range(len(point_ids))):
     c = colors[i][:-1]
-    ret_out.append('fc ' +  f"{c[0]} {c[1]}  {c[1]} ")
+    ret_out.append('fc ' + f"{c[0]} {c[1]}  {c[1]} ")
     ret_out.append('f ' + ' '.join(map(lambda x: str(x+1), point_ids[i])))
 f.write('\n'.join(ret_out))
 f.close()
