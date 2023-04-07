@@ -9,6 +9,7 @@ export default function NavbarComponent(props) {
     <Navbar bg="dark" variant="dark"  >
           <Navbar.Brand className="ms-5" >Demos</Navbar.Brand>
           <Nav className="me-auto">
+            <Nav.Link onClick={() => props.setState('vertexNormals')}>Vertex Normals</Nav.Link>
             <Nav.Link onClick={() => props.setState('basicMesh')}>Basic Mesh</Nav.Link>
             <Nav.Link onClick={() => props.setState('algorithm')}>Algorithm</Nav.Link>
             <Nav.Link onClick={() => props.setState('rendering')}>Rendering</Nav.Link>
